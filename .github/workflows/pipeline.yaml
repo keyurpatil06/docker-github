@@ -48,6 +48,12 @@ jobs:
           docker stop hello-world-app-container || true
           docker rm hello-world-app-container || true
           docker run -d --name hello-world-app-container -p 3000:3000 keyurpatil06/hello-world-app
+          echo "Waiting for container to start..."
+          sleep 5
+          docker ps
+          docker logs hello-world-app-container
 
       - name: Verify successful deployment
-        run: curl -f http://localhost:3000 || exit 1
+        run: |
+          echo "Checking service..."
+          curl -f http://localhost:3000 || (docker logs hello-world-app-container && exit 1)
